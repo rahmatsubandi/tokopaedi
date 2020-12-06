@@ -1,3 +1,14 @@
+<p align="center"><a href="https://github.com/rahmatsubandi/tokopaedi" target="_blank"><img src="https://i.ibb.co/pn8tG8w/Tokopaedi.jpg" width="400"></a></p>
+
+## About Developer
+
+Hello, my name is Rahmat Subandi. I am a student at the University of Mercu Buana, Undergraduate Program with the Department of Informatics Engineering.
+
+## About Tokopaedi
+
+The first lesson uses a very sophisticated PHP Framework, namely the Laravel Framework version 7.30.0 with a case study of creating an Online Store. By cloning or parodying the largest online store in Indonesia, Tokopedia becomes Tokopaedi (This name is inspired by one of the memes on Instagram).
+
+
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
 
 <p align="center">
