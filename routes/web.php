@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,5 +34,11 @@ Route::get('/dashboard/transactions/{id}', 'DashboardTransactionController@detai
 
 Route::get('/dashboard/settings', 'DashboardSettingController@store')->name('dashboard-settings-store');
 Route::get('/dashboard/account', 'DashboardSettingController@account')->name('dashboard-settings-account');
+
+// Admin
+
+Route::prefix('admin')->namespace('Admin')->group(function () {
+  Route::get('/', 'DashboardController@index')->name('admin-dashboard');
+});
 
 Auth::routes();
