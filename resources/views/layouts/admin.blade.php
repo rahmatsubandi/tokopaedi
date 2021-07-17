@@ -12,7 +12,9 @@
   @stack('prepend-style')
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <link href="{{ url('/style/main.css') }}" rel="stylesheet" />
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.css" />
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css  " />
 
   @stack('addon-style')
 </head>
@@ -29,13 +31,15 @@
           </a>
         </div>
         <div class="list-group list-group-flush">
-          <a href="{{ route('admin-dashboard') }}" class="list-group-item list-group-item-action">
+          <a href="{{ route('admin-dashboard') }}"
+            class="list-group-item list-group-item-action {{ (request()->is('admin')) ? 'active' : '' }}">
             Dashboard
           </a>
           <a href="" class="list-group-item list-group-item-action">
             Products
           </a>
-          <a href="" class="list-group-item list-group-item-action">
+          <a href="{{ route('category.index') }}"
+            class="list-group-item list-group-item-action {{ (request()->is('admin/category*')) ? 'active' : '' }}">
             Categories
           </a>
           <a href="" class="list-group-item list-group-item-action">
@@ -97,7 +101,9 @@
   @stack('prepend-script')
   <script src="/vendor/jquery/jquery.min.js"></script>
   <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.25/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.25/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js">
+  </script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
     AOS.init();

@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('title')
-Tokopaedi | Dashboard
+Dashboard
 @endsection
 
 @section('content')
