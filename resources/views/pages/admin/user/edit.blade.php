@@ -38,8 +38,13 @@ User | Edit
                   <div class="col-md-12">
                     <div class="form-group">
                       <label for="">Email User</label>
+                      @if($item->email != old('email'))
                       <input type="email" name="email" class="form-control" id="" placeholder="Email User"
-                        value="{{ $item->email }}" readonly>
+                        value="{{ $item->email }}" required>
+                      @else
+                      <input type="email" name="email" class="form-control" id="" placeholder="Email User"
+                        value="{{ old('email') }}" readonly>
+                      @endif
                     </div>
                   </div>
                   <div class="col-md-12">

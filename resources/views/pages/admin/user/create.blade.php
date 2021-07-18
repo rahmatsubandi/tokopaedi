@@ -22,6 +22,12 @@ User | Create
             @endforeach
           </div>
           @endif
+          {{-- memberikan alert dari jika email sudah ada di database --}}
+          @if(Session::has('status'))
+          <div class="alert alert-danger">
+            {{ Session::get('status') }}
+          </div>
+          @endif
           <div class="card">
             <div class="card-body">
               <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">

@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\User;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-use App\Http\Requests\Admin\UserRequest;
-
+use App\Http\Requests\Admin\ProductRequest;
+use App\User;
+use App\Category;
 use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
-class UserController extends Controller
+class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -23,8 +24,12 @@ class UserController extends Controller
     {
         // mengecek apakah memanggil ajax atau bukan
         if (request()->ajax()) {
-            // memanggil query untuk model user
-            $query = User::query();
+            /** 
+             * Jika ingin menampilkan data yang terhapus (bila menggunakan SoftDeletes)
+             * $query = Product::with(['user', 'category']->withTrashed());
+             */
+            // memanggil query untuk model product berdasarkan relasi
+            $query = Product::with(['user', 'category']);
 
             return DataTables::of($query)
                 ->addColumn('action', function ($item) {
@@ -33,8 +38,8 @@ class UserController extends Controller
                         <div class="dropdown">
                         <button class="btn btn-success dropdown-toggle mr-1 mb-1" type="button" data-toggle="dropdown">Action</button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="' . route('user.edit', $item->id) . '">Edit</a>
-                                <form method="post" action="' . route('user.destroy', $item->id) . '">
+                                <a class="dropdown-item" href="' . route('product.edit', $item->id) . '">Edit</a>
+                                <form method="post" action="' . route('product.destroy', $item->id) . '">
                                 ' . method_field('DELETE') . csrf_field() . '
                                 <button class="dropdown-item text-danger" type="submit">Delete</button>
                                 </form>
@@ -43,10 +48,18 @@ class UserController extends Controller
                     </div>
                     ';
                 })
-                ->rawColumns(['action'])
+                // edit column description dengan menghilangkan karakter html
+                ->editColumn('description', function ($item) {
+                    return strip_tags($item->description);
+                })
+                // edit column price dengan number format indonesia
+                ->editColumn('price', function ($item) {
+                    return number_format($item->price, 0, ',', '.');
+                })
+                ->rawColumns(['action', 'description', 'price'])
                 ->make();
         }
-        return view('pages.admin.user.index');
+        return view('pages.admin.product.index');
     }
 
     /**
@@ -56,33 +69,30 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.user.create');
+        $users = User::all();
+        $categories = Category::all();
+
+        return view('pages.admin.product.create', [
+            'users' => $users,
+            'categories' => $categories
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  App\Http\Requests\Admin\UserRequest  $request
+     * @param  App\Http\Requests\Admin\ProductRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(ProductRequest $request)
     {
         $data = $request->all();
 
-        $data['password'] = bcrypt($request->password);
-        // jika email yang disimpan sudah ada
-        if (User::where('email', $data['email'])->first()) {
-            return redirect()->back()->with('status', 'Use another email, because this email is already registered');
-        }
-        // Jika email yang disimpan tidak ada
-        // else {
-        //     $user = User::create($data);
-        //     return redirect()->route('user.index')->with('status', 'Berhasil menambahkan user');
-        // }
+        $data['slug'] = Str::slug($request->name);
 
-        User::create($data);
+        Product::create($data);
 
-        return redirect()->route('user.index');
+        return redirect()->route('product.index');
     }
 
     /**
@@ -104,50 +114,36 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $item = User::findOrFail($id);
+        $users = User::all();
+        $categories = Category::all();
 
-        return view('pages.admin.user.edit', [
+        $item = Product::findOrFail($id);
+
+        return view('pages.admin.product.edit', [
             'item' => $item,
+            'users' => $users,
+            'categories' => $categories
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  App\Http\Requests\Admin\UserRequest  $request
+     * @param  App\Http\Requests\Admin\ProductRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UserRequest $request, $id)
+    public function update(ProductRequest $request, $id)
     {
         $data = $request->all();
 
-        $item = User::findOrFail($id);
+        $item = Product::findOrFail($id);
 
-        if ($request->password) {
-            $data['password'] = bcrypt($request->password);
-        } else {
-            unset($data['password']);
-        }
-
-        // membuat logic untuk mengganti email dengan email yang berbeda
-        if ($item->email != $data['email']) {
-            // jika email yang baru ada sudah ada, maka akan menghasilkan error
-            if (User::where('email', $data['email'])->count() > 0) {
-                return redirect()->back()->withErrors(['email' => 'Use another email, because this email is already registered']);
-            } // jika email belum ada, maka akan mengambil email yang baru
-            else {
-                $data['email'] = $data['email'];
-            }
-        } else {
-            $data['email'] = $item->email;
-        }
-
-
+        $data['slug'] = Str::slug($request->name);
 
         $item->update($data);
 
-        return redirect()->route('user.index');
+        return redirect()->route('product.index');
     }
 
     /**
@@ -159,9 +155,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         // hapus data dengan menghapus photo
-        $item = User::findOrFail($id);
+        $item = Product::findOrFail($id);
         $item->delete();
 
-        return redirect()->route('user.index');
+        return redirect()->route('product.index');
     }
 }
