@@ -8757,8 +8757,7 @@
   \********************************************/
             /*! no static exports found */
             /***/ function (module, exports, __webpack_require__) {
-                var __WEBPACK_AMD_DEFINE_ARRAY__,
-                    __WEBPACK_AMD_DEFINE_RESULT__;
+                var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;
                 /*!
                  * jQuery JavaScript Library v3.5.1
                  * https://jquery.com/
